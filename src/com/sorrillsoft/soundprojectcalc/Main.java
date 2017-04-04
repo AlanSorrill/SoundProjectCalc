@@ -67,7 +67,7 @@ public class Main extends javax.swing.JFrame {
             a = 4;
             b = 0.4;
         }
-        return (((343 * over) / freq) / a) - b * diameter;
+        return (((velocity * over) / freq) / a) - b * diameter;
     }
 
     /**

@@ -5,6 +5,10 @@
  */
 package com.sorrillsoft.soundprojectcalc;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.util.HashMap;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -13,12 +17,33 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Main extends javax.swing.JFrame {
 
+    private HashMap<Note, Double> baseFreq = new HashMap();
+
+    private void initMap() {
+        baseFreq.put(Note.A, 27.50);
+        baseFreq.put(Note.As, 29.14);
+        baseFreq.put(Note.B, 30.87);
+        baseFreq.put(Note.C, 16.35);
+        baseFreq.put(Note.Cs, 17.32);
+        baseFreq.put(Note.D, 18.35);
+        baseFreq.put(Note.Ds, 19.45);
+        baseFreq.put(Note.E, 20.60);
+        baseFreq.put(Note.F, 21.83);
+        baseFreq.put(Note.Fs, 23.12);
+        baseFreq.put(Note.G, 24.50);
+        baseFreq.put(Note.Gs, 25.96);
+    }
 
     /**
      * Creates new form Main
      */
     public Main() {
+        initMap();
         initComponents();
+        updateTable();
+
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2);
     }
 
     private DefaultTableModel getModel() {
@@ -26,7 +51,23 @@ public class Main extends javax.swing.JFrame {
     }
 
     private double getFrequancy(int octave, Note n) {
+        double base = baseFreq.get(n);
 
+        return base * Math.pow(2, (double) octave);
+    }
+    private boolean open = false;
+
+    private double getLength(double freq, double diameter, int over) {
+        int a;
+        double b;
+        if (open) {
+            a = 2;
+            b = 0.8;
+        } else {
+            a = 4;
+            b = 0.4;
+        }
+        return (((343 * over) / freq) / a) - b * diameter;
     }
 
     /**
@@ -38,13 +79,26 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         octaveSelection = new javax.swing.JComboBox();
+        jLabel2 = new javax.swing.JLabel();
+        diameterInput = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        overtoneInput = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        velocityInput = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Sound Project Tube Calc");
+        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -52,6 +106,86 @@ public class Main extends javax.swing.JFrame {
 
         octaveSelection.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8" }));
         octaveSelection.setSelectedIndex(4);
+        octaveSelection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                octaveSelectionActionPerformed(evt);
+            }
+        });
+        octaveSelection.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                octaveSelectionPropertyChange(evt);
+            }
+        });
+
+        jLabel2.setText("Diameter:");
+
+        diameterInput.setText(diameter + "");
+        diameterInput.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                diameterInputKeyReleased(evt);
+            }
+        });
+
+        jLabel3.setText("m");
+
+        jLabel4.setText("Overtone:");
+
+        overtoneInput.setText(overtone + "");
+        overtoneInput.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                overtoneInputKeyReleased(evt);
+            }
+        });
+
+        jLabel5.setText("S Velocity:");
+        jLabel5.setToolTipText("Speed of sound");
+
+        velocityInput.setText(velocity + "");
+        velocityInput.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                velocityInputKeyReleased(evt);
+            }
+        });
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setText("Open");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(jRadioButton2);
+        jRadioButton2.setSelected(true);
+        jRadioButton2.setText("Closed");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jRadioButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jRadioButton2)
+                .addContainerGap(8, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jRadioButton2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -59,9 +193,30 @@ public class Main extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(octaveSelection, 0, 212, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(overtoneInput)
+                                    .addComponent(velocityInput))
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(diameterInput, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(octaveSelection, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -71,6 +226,22 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(octaveSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(diameterInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(overtoneInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(velocityInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -79,7 +250,7 @@ public class Main extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Note", "Freq", "Length"
+                "Note", "Freq (Hz)", "Length (m)"
             }
         ) {
             Class[] types = new Class [] {
@@ -98,23 +269,87 @@ public class Main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(259, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void octaveSelectionPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_octaveSelectionPropertyChange
+
+    }//GEN-LAST:event_octaveSelectionPropertyChange
+
+    private void octaveSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_octaveSelectionActionPerformed
+        updateTable();
+    }//GEN-LAST:event_octaveSelectionActionPerformed
+    private double diameter = 0.0127;
+    private double velocity = 343;
+    private int overtone = 0;
+    private void diameterInputKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_diameterInputKeyReleased
+        try {
+            double d = Double.parseDouble(diameterInput.getText());
+            diameterInput.setForeground(Color.BLACK);
+            diameter = d;
+            updateTable();
+        } catch (NumberFormatException nfe) {
+            diameterInput.setForeground(Color.RED);
+        }
+    }//GEN-LAST:event_diameterInputKeyReleased
+
+    private void overtoneInputKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_overtoneInputKeyReleased
+        try {
+            int i = Integer.parseInt(overtoneInput.getText());
+            overtoneInput.setForeground(Color.BLACK);
+            overtone = i;
+            updateTable();
+        } catch (NumberFormatException nfe) {
+            overtoneInput.setForeground(Color.RED);
+        }
+    }//GEN-LAST:event_overtoneInputKeyReleased
+
+    private void velocityInputKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_velocityInputKeyReleased
+        try {
+            double d = Double.parseDouble(velocityInput.getText());
+            velocityInput.setForeground(Color.BLACK);
+            velocity = d;
+            updateTable();
+        } catch (NumberFormatException nfe) {
+            velocityInput.setForeground(Color.RED);
+        }
+    }//GEN-LAST:event_velocityInputKeyReleased
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        open = false;
+        updateTable();
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        open = true;
+        updateTable();
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    private void updateTable() {
+        DefaultTableModel m = getModel();
+        while (m.getRowCount() > 0) {
+            m.removeRow(0);
+        }
+        double freq;
+        for (Note n : Note.values()) {//getLength(double freq, double diameter, int over)
+            freq = getFrequancy(octaveSelection.getSelectedIndex(), n);
+            m.addRow(new Object[]{n.toString(), freq, getLength(freq, diameter, (2 * overtone + 1))});
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -152,10 +387,21 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JTextField diameterInput;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox octaveSelection;
+    private javax.swing.JTextField overtoneInput;
     private javax.swing.JTable table;
+    private javax.swing.JTextField velocityInput;
     // End of variables declaration//GEN-END:variables
 }

@@ -11,5 +11,5 @@ package com.sorrillsoft.soundprojectcalc;
  */
 public enum Note {
 
-    A, As, B, C, Cs, D, Ds, E, F, Fs, G, Gs
+    C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B
 }
